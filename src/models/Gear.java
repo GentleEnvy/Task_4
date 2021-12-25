@@ -64,6 +64,7 @@ public class Gear
         double angle = 0;
         double deltaAngle = Math.PI / n;
         
+        Vector2 firstV = null;
         Vector2 prevV = null;
         for (int i = 0; i < 2 * n; ++i) {
             var externalV = new Vector2(
@@ -80,8 +81,8 @@ public class Gear
             
             angle += deltaAngle;
             
-            if (prevV == null) {
-                prevV = externalV;
+            if (firstV == null) {
+                firstV = externalV;
             } else {
                 var toothVertex = getToothVertexes(prevV, externalV);
                 
@@ -89,10 +90,18 @@ public class Gear
                     Arrays.asList(prevV, toothVertex, externalV)
                 );
                 lines.add(new PolyLine2D(pointsTooth, false));
-                
-                prevV = null;
             }
+            prevV = externalV;
         }
+        if (firstV != null) {
+            var toothVertex = getToothVertexes(prevV, firstV);
+            
+            var pointsTooth = new ArrayList<>(
+                Arrays.asList(prevV, toothVertex, firstV)
+            );
+            lines.add(new PolyLine2D(pointsTooth, false));
+        }
+        
         lines.add(new PolyLine2D(pointsExternalBase, true));
         lines.add(new PolyLine2D(pointsInternalBase, true));
         
