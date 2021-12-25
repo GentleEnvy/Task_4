@@ -83,12 +83,10 @@ public class Gear
             if (prevV == null) {
                 prevV = externalV;
             } else {
-                var toothVertexes = getToothVertexes(prevV, externalV);
-                var a = toothVertexes[0];
-                var d = toothVertexes[1];
+                var toothVertex = getToothVertexes(prevV, externalV);
                 
                 var pointsTooth = new ArrayList<>(
-                    Arrays.asList(prevV, a, d, externalV)
+                    Arrays.asList(prevV, toothVertex, externalV)
                 );
                 lines.add(new PolyLine2D(pointsTooth, false));
                 
@@ -101,17 +99,12 @@ public class Gear
         return lines;
     }
     
-    private Vector2[] getToothVertexes(Vector2 v1, Vector2 v2) {
+    private Vector2 getToothVertexes(Vector2 v1, Vector2 v2) {
         var bx = (v1.getX() + v2.getX()) / 2;
         var by = (v1.getY() + v2.getY()) / 2;
         var r = Math.sqrt(bx * bx + by * by);
         var cx = bx * (1 + toothLength / r);
         var cy = by * (1 + toothLength / r);
-        
-        var ax = v1.getX() + cx - bx;
-        var ay = v1.getY() + cy - by;
-        var dx = v2.getX() + cx - bx;
-        var dy = v2.getY() + cy - by;
-        return new Vector2[] {new Vector2(ax, ay), new Vector2(dx, dy)};
+        return new Vector2(cx, cy);
     }
 }
